@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Ground
+  - Door
+  - NPC
+  - Enemy
+  - Grid
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Ground
+  - Player
+  - NPC
+  - Room
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2620656635
+    locked: 0
+  - name: Background1
+    uniqueID: 2750161007
+    locked: 0
+  - name: Background2
+    uniqueID: 1028778047
+    locked: 0
+  - name: Background3
+    uniqueID: 2440723015
+    locked: 0
+  - name: Entities
+    uniqueID: 453343105
+    locked: 0
+  - name: Player
+    uniqueID: 2875179935
+    locked: 0
+  - name: Foreground
+    uniqueID: 214521779
+    locked: 0
