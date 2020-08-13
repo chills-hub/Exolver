@@ -86,7 +86,7 @@ public class EventManager : MonoBehaviour
                     OnInteractDungeon();
             }
         }
-        else 
+        else
         {
             _refHolder.InteractArrowDungeon.SetActive(false);
         }
@@ -98,6 +98,7 @@ public class EventManager : MonoBehaviour
         _refHolder.MerchantUiPanel.gameObject.SetActive(false);
         _refHolder.MerchantSpeechPanel.gameObject.SetActive(false);
         Player.GetComponent<PlayerController>().enabled = true;
+        _gameManager.GetComponent<SaveGame>().Save();
     }
 
     public void PauseTheGameEvent()

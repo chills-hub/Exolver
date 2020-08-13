@@ -33,20 +33,26 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking;
     public float slopeCheckAngle;
     public float currentHealth;
+    public Transform AttackPoint;
+    public float attackRange = 0.5f;
 
     //Layer Masks
     public LayerMask groundMask;
     public LayerMask playerMask;
+    public LayerMask enemyMask;
 
     public float jumpForce = 1000f;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public float moveSpeed = 10f;
+    private RaycastHit2D attackRay;
+
     public PlayerStats PlayerStats { get; set;}
 
     // Start is called before the first frame update
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         currentHealth = PlayerStats.MaxHealth;
         movementSM = transform.gameObject.AddComponent<StateMachine>();
         _inputManager = transform.gameObject.AddComponent<InputManager>();
@@ -113,12 +119,21 @@ public class PlayerController : MonoBehaviour
     {
         int index = UnityEngine.Random.Range(1, 4);
         _animator.Play("Player_Attack0" + index);
-        RaycastHit2D attackRay = Physics2D.Raycast(transform.position, Vector2.right, 0.6f);
 
-        //if (attackRay.collider != null && attackRay.collider.CompareTag("Enemy")) 
-        //{
-        //    //implement health removal from enemy
-        //}
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, attackRange, enemyMask);
+
+        foreach (Collider2D collider in hitEnemies)
+        {
+            collider.GetComponent<EnemyAi>().TakeDamage(PlayerStats.Damage);
+            var force = transform.position - collider.transform.position;
+            force.Normalize();
+            collider.GetComponent<Rigidbody2D>().AddForce(-force * 600f);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(AttackPoint.transform.position, attackRange);
     }
 
     bool CheckIfGrounded()
@@ -132,22 +147,6 @@ public class PlayerController : MonoBehaviour
 
     public void CheckForWalls()
     {
-        #region raycast version
-        //int playerLayer = 9;
-        //int layerMask = ~(1 << playerLayer); //Exclude layer 9 as this is the player
-
-        //RaycastHit2D wallRayLeft = Physics2D.Raycast(_playerCollider.bounds.center, Vector2.left, _playerCollider.bounds.extents.y + 0.1f, layerMask);
-        //RaycastHit2D wallRayRight = Physics2D.Raycast(_playerCollider.bounds.center, Vector2.right, _playerCollider.bounds.extents.y + 0.1f, layerMask);
-        //Debug.DrawRay(_playerCollider.bounds.center, Vector2.left,Color.red, _playerCollider.bounds.extents.y + 0.1f);
-        //Debug.DrawRay(_playerCollider.bounds.center, Vector2.right, Color.red, _playerCollider.bounds.extents.y + 0.1f);
-
-        //if (wallRayLeft || wallRayRight)
-        //{
-        //    _parallax.Speed = 0;
-        //    _playerBody.AddForce(-_playerBody.velocity.normalized * moveSpeed);
-        //}
-        #endregion
-        //Use this for walljumps
         int playerLayer = 9;
         int layerMask = ~(1 << playerLayer); //Exclude layer 9 as this is the player
 

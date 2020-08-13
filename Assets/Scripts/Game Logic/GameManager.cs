@@ -1,4 +1,5 @@
 ﻿using SaveSystem;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -22,21 +23,16 @@ public class GameManager : MonoBehaviour
             Loader.LoadSaveFile();
         }
 
-        //StartCoroutine(PlayerSpeak());
         //_gameState = GameState.Active;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void ApplyHealthChanges(float damage) 
     {
-        // float afterDamageHealth = Player.currentHealth - (damage * (float)Player.PlayerStats.Defense);
+        float defenseValue = 100 - Player.PlayerStats.Defense;
+        string decimalValue = "0." + defenseValue;
+        decimal actualDefenseValue = Convert.ToDecimal(decimalValue);
+        float afterDamageHealth = Player.currentHealth - (damage * (float)actualDefenseValue);
         StartCoroutine(Player.DamageFlash());
-        float afterDamageHealth = Player.currentHealth - damage;
         Healthbar.SetHealth(afterDamageHealth);
         Player.currentHealth = afterDamageHealth;
         CheckHealthValueForGameOver(afterDamageHealth);
@@ -49,6 +45,7 @@ public class GameManager : MonoBehaviour
             Player._animator.SetBool("ZeroHealth", true);
             Player.moveSpeed = 0;
             _gameState = GameState.GameOver;
+            StartCoroutine(WaitForEndGame());
         }
     }
 
@@ -58,10 +55,9 @@ public class GameManager : MonoBehaviour
         Healthbar.SetHealth(Player.PlayerStats.MaxHealth);
     }
 
-    //IEnumerator PlayerSpeak()
-    //{
-    //    Player.GetComponentInChildren<TextMeshProUGUI>().text = "Where am I...";
-    //    yield return new WaitForSeconds(3f);
-    //    Player.GetComponentInChildren<TextMeshProUGUI>().gameObject.SetActive(false);
-    //}
+    private IEnumerator WaitForEndGame() 
+    {
+        yield return new WaitForSeconds(1f);
+        Time.timeScale = 0;
+    }
 }

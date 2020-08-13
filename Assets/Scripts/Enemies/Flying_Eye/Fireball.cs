@@ -1,16 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Fireball : MonoBehaviour
 {
     private float speed = 6f;
     public float Damage;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
     // Update is called once per frame
     void Update()
@@ -23,16 +17,35 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(gameObject);
+        if (!collision.gameObject.CompareTag("Player"))
+        {
+            Physics2D.IgnoreCollision(collision.collider, GetComponent<CircleCollider2D>());
+        }
 
         if (collision.gameObject.CompareTag("Player")) 
         {
             FindObjectOfType<GameManager>().ApplyHealthChanges(Damage);
+            Destroy(gameObject);
         }
+
+        StartCoroutine(FireballLifetime());
     }
 
     void FlipCharacter()
     {
-        //FIX THIS
+        if (GetComponent<Rigidbody2D>().velocity.x >= 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = false;
+        }
+        else 
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
+    }
+
+    public IEnumerator FireballLifetime()
+    {
+        yield return new WaitForSeconds(1f);
+        Destroy(gameObject);
     }
 }

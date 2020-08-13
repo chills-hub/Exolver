@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using System;
 
 public class EnemyAi : MonoBehaviour
 {
     public Transform Target;
     public float speed = 200f;
     public float nextWaypointDistance = 3f;
+    public EnemyStats _enemyStats;
+    private Animator EnemyAnimator;
 
     int currentWaypoint = 0;
     bool ReachedEndOfPath;
@@ -22,9 +25,12 @@ public class EnemyAi : MonoBehaviour
     {
         _enemyBody = GetComponent<Rigidbody2D>();
         _seeker = GetComponent<Seeker>();
+        EnemyAnimator = GetComponent<Animator>();
+        _enemyStats = GetComponent<EnemyStats>();
 
         //Start a waypoint path to the player
         InvokeRepeating("UpdatePath", 0f, 0.5f);
+        _enemyStats.CurrentHealth = _enemyStats.Health;
     }
 
     void UpdatePath() 
@@ -73,14 +79,52 @@ public class EnemyAi : MonoBehaviour
             //Move to next waypoint in path
             currentWaypoint++;
         }
+    }
 
-        if (Force.x >= 0.01f)
+    private void Update()
+    {
+        GetComponent<SpriteRenderer>().flipX = Target.position.x < transform.position.x;
+    }
+
+    public void EnemyDie()
+    {
+        EnemyAnimator.SetBool("Dead", true);
+        GetComponent<Rigidbody2D>().gravityScale = 2;
+        StartCoroutine(KillEnemy());
+    }
+
+    public void TakeDamage(float damage)
+    {
+        StartCoroutine(DamageFlash());
+        float defenseValue = 100 - _enemyStats.Defence;
+        string decimalValue = "0." + defenseValue;
+        decimal actualDefenseValue = Convert.ToDecimal(decimalValue);
+        float afterDamageHealth = _enemyStats.CurrentHealth - (damage * (float)actualDefenseValue);
+
+        if (afterDamageHealth <= 0)
         {
-            GetComponent<SpriteRenderer>().flipX = false;  
+            EnemyDie();
         }
-        else if (Force.x <= -0.01f) 
+        else 
+        { _enemyStats.CurrentHealth = afterDamageHealth; }
+    }
+
+    public IEnumerator DamageFlash()
+    {
+        for (int n = 0; n < 2; n++)
         {
-            GetComponent<SpriteRenderer>().flipX = true;
+            GetComponent<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(0.1f);
         }
     }
+
+    public IEnumerator KillEnemy()
+    {
+       GetComponent<Rigidbody2D>().Sleep();
+       yield return new WaitForSeconds(3f);
+       Destroy(gameObject);
+    }
+
 }
