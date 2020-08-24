@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 6519530222775095071}
   - component: {fileID: 3033165747745248583}
   - component: {fileID: 5907882154620860563}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Fireball
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,7 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 0
-  flyingEye: {fileID: 0}
 --- !u!58 &5907882154620860563
 CircleCollider2D:
   m_ObjectHideFlags: 0

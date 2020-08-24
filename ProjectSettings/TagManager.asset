@@ -9,6 +9,8 @@ TagManager:
   - NPC
   - Enemy
   - Grid
+  - Projectile
+  - Merchant
   layers:
   - Default
   - TransparentFX

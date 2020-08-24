@@ -1,7 +1,8 @@
-﻿public class DodgingState : GroundedState
-{
-    protected bool _dodgeInput;
+﻿using System.Collections;
+using UnityEngine;
 
+public class DodgingState : State
+{
     public DodgingState(PlayerController playerController, StateMachine stateMachine) : base(playerController, stateMachine)
     {
     }
@@ -21,15 +22,10 @@
     {
         base.LogicUpdate();
 
-        if (!_dodgeInput)
+        if (!_playerController.GetComponent<InputManager>().Dodge())
         {
             //SoundManager.Instance.PlaySound(SoundManager.Instance.landing);
             _stateMachine.ChangeState(_playerController.standing);
-        }
-
-        if (_dodgeInput)
-        {
-            Dodge();
         }
     }
 
@@ -40,6 +36,6 @@
 
     private void Dodge()
     {
-        _playerController._animator.SetBool("Dodging", _inputManager.Dodge());
+        _playerController.isDodging = true;
     }
 }

@@ -6,6 +6,7 @@ public class Damage : MonoBehaviour
 {
     public float damage;
     public PlayerController Player;
+    public GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,7 @@ public class Damage : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))
         {
-            //_gameManager.ApplyHealthChanges(damage);
+            gameManager.ApplyHealthChanges(damage);
            // Player.PlayerStats.AvailableUpgradePoints++;
         }        
     }

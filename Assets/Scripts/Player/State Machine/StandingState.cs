@@ -13,12 +13,14 @@ public class StandingState : GroundedState
         base.Enter();
         _speed = _playerController.moveSpeed;
         jump = false;
+        //_playerController.isDodging = false;
     }
 
     public override void HandleInput()
     {
         base.HandleInput();
         jump = _playerController._inputManager.PlayerJumpInput();
+        dodge = _playerController._inputManager.Dodge();
     }
 
     public override void LogicUpdate()

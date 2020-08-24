@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public StandingState standing;
     public DodgingState dodging;
     public JumpingState jumping;
+    public DashingState dashing;
 
     //acessory injected instances
     public InputManager _inputManager;
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
     public bool isMoving;
     public bool isGrounded;
     public bool isAttacking;
+    public bool isDodging;
     public float slopeCheckAngle;
     public float currentHealth;
     public Transform AttackPoint;
@@ -45,14 +47,12 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public float moveSpeed = 10f;
-    private RaycastHit2D attackRay;
 
     public PlayerStats PlayerStats { get; set;}
 
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
         currentHealth = PlayerStats.MaxHealth;
         movementSM = transform.gameObject.AddComponent<StateMachine>();
         _inputManager = transform.gameObject.AddComponent<InputManager>();
@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
         standing = new StandingState(this, movementSM);
         dodging = new DodgingState(this, movementSM);
         jumping = new JumpingState(this, movementSM);
+        dashing = new DashingState(this, movementSM);
         movementSM.Initialise(standing);
         _audioSource.Play();
         _audioSource.Pause();
@@ -87,12 +88,19 @@ public class PlayerController : MonoBehaviour
         isGrounded = CheckIfGrounded();
         slopeCheckAngle = CheckSlopeAngle();
 
+        //Debug.Log(isDodging);
+
         if (_attackInput && !isAttacking)
         {
             isAttacking = true;
             isMoving = false;
             StartCoroutine(AttackWait());
             HandleAttacking();
+        }
+
+        if (isDodging) 
+        {
+            StartCoroutine(DodgeWait());
         }
 
         SetAnimationTriggers();
@@ -117,17 +125,28 @@ public class PlayerController : MonoBehaviour
 
     void HandleAttacking()
     {
-        int index = UnityEngine.Random.Range(1, 4);
-        _animator.Play("Player_Attack0" + index);
+        if (currentHealth >= 0)
+        {
+            int index = UnityEngine.Random.Range(1, 4);
+            _animator.Play("Player_Attack0" + index);
+        }
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, attackRange, enemyMask);
 
         foreach (Collider2D collider in hitEnemies)
         {
-            collider.GetComponent<EnemyAi>().TakeDamage(PlayerStats.Damage);
-            var force = transform.position - collider.transform.position;
-            force.Normalize();
-            collider.GetComponent<Rigidbody2D>().AddForce(-force * 600f);
+            if (collider.CompareTag("Projectile")) 
+            {
+                Destroy(collider.gameObject);
+            }
+
+            if (!collider.CompareTag("Projectile")) 
+            {
+                collider.GetComponent<EnemyAi>().TakeDamage(PlayerStats.Damage);
+                var force = transform.position - collider.transform.position;
+                force.Normalize();
+                collider.GetComponent<Rigidbody2D>().AddForce(-force * 600f);
+            }
         }
     }
 
@@ -234,6 +253,12 @@ public class PlayerController : MonoBehaviour
             GetComponent<SpriteRenderer>().color = Color.white;
             yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    private IEnumerator DodgeWait()
+    {
+        yield return new WaitForSeconds(0.8f);
+        isDodging = false;
     }
     #endregion
 

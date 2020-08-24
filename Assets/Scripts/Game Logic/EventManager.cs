@@ -31,8 +31,8 @@ public class EventManager : MonoBehaviour
     void Start()
     {
         Player = FindObjectOfType<PlayerController>();
-        _refHolder = FindObjectOfType<GameManager>().GetComponent<ReferenceHolder>();
-        _gameManager = FindObjectOfType<GameManager>();
+        _gameManager = this.gameObject.GetComponent<GameManager>();
+        _refHolder = _gameManager.GetComponent<ReferenceHolder>();
         UpgradeStats = new UpgradeStats();
     }
 

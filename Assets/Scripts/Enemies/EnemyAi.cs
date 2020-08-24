@@ -89,12 +89,15 @@ public class EnemyAi : MonoBehaviour
     public void EnemyDie()
     {
         EnemyAnimator.SetBool("Dead", true);
-        GetComponent<Rigidbody2D>().gravityScale = 2;
+        GetComponent<Rigidbody2D>().gravityScale = 10;
+        this.enabled = false;
+        _seeker.enabled = false;
         StartCoroutine(KillEnemy());
     }
 
     public void TakeDamage(float damage)
     {
+        EnemyAnimator.SetBool("TakeHit", true);
         StartCoroutine(DamageFlash());
         float defenseValue = 100 - _enemyStats.Defence;
         string decimalValue = "0." + defenseValue;
@@ -106,7 +109,9 @@ public class EnemyAi : MonoBehaviour
             EnemyDie();
         }
         else 
-        { _enemyStats.CurrentHealth = afterDamageHealth; }
+        { 
+            _enemyStats.CurrentHealth = afterDamageHealth;
+        }
     }
 
     public IEnumerator DamageFlash()
@@ -118,12 +123,14 @@ public class EnemyAi : MonoBehaviour
             GetComponent<SpriteRenderer>().color = Color.white;
             yield return new WaitForSeconds(0.1f);
         }
+        EnemyAnimator.SetBool("TakeHit", false);
     }
 
     public IEnumerator KillEnemy()
     {
-       GetComponent<Rigidbody2D>().Sleep();
-       yield return new WaitForSeconds(3f);
+        _enemyBody.Sleep();
+        _enemyBody.velocity = Vector2.zero;
+       yield return new WaitForSeconds(2f);
        Destroy(gameObject);
     }
 

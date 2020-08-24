@@ -40,7 +40,7 @@ public class InputManager: MonoBehaviour
     }
     public bool Fire2()
     {
-        return Input.GetMouseButtonDown(1);
+        return Input.GetMouseButton(1);
     }
 
     public bool Pause()
