@@ -15,4 +15,13 @@ public class StartGame : MonoBehaviour
         IsPlayerLoading = true;
         SceneManager.LoadScene("Main_Hub");
     }
+
+    public void EnterGameplay() 
+    {
+        SceneManager.LoadScene("Gameplay");
+        Scene sceneToLoad = SceneManager.GetSceneByName("Gameplay");
+        SceneManager.SetActiveScene(sceneToLoad);
+        //SceneManager.UnloadSceneAsync("Main_Hub");
+        SceneManager.MoveGameObjectToScene(FindObjectOfType<PlayerController>().gameObject, sceneToLoad);
+    }
 }

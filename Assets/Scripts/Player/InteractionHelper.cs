@@ -1,22 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractionHelper : MonoBehaviour
 {
     private ReferenceHolder _refHolder;
     private PlayerController player;
+    private GameManager gameManager;
 
     private void OnDisable()
     {
         EventManager.OnInteract -= Interact;
+        EventManager.OnInteractDungeon -= InteractDungeon;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         EventManager.OnInteract += Interact;
-        _refHolder = FindObjectOfType<GameManager>().GetComponent<ReferenceHolder>();
+        EventManager.OnInteractDungeon += InteractDungeon;
+        gameManager = FindObjectOfType<GameManager>();
+        _refHolder = gameManager.GetComponent<ReferenceHolder>();
         player = FindObjectOfType<PlayerController>();
     }
 
@@ -35,5 +37,12 @@ public class InteractionHelper : MonoBehaviour
         _refHolder.DefenseValueText.text = player.PlayerStats.Defense.ToString();
         _refHolder.LevelValueText.text = player.PlayerStats.Level.ToString();
         _refHolder.UpgradePointsValueText.text = player.PlayerStats.AvailableUpgradePoints.ToString();
+    }
+
+    void InteractDungeon() 
+    {
+        //DISPLAY TEXT HERE
+        //INTO THE NIGHTMARE
+        gameManager.startGame.EnterGameplay();
     }
 }

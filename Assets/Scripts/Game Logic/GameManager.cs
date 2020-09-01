@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,10 @@ public class GameManager : MonoBehaviour
     public HealthBar Healthbar;
     public PlayerController Player;
     public GameState _gameState = new GameState();
-    private StartGame startGame;
+    [HideInInspector]
+    public StartGame startGame;
     private ReferenceHolder referenceHolder;
+    [HideInInspector]
     public SaveGame Loader;
 
     static GameManager gameManagerInstance; 

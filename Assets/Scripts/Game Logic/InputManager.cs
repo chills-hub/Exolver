@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class InputManager: MonoBehaviour 
 {
+    private void Start()
+    {
+        DontDestroyOnLoad(this);
+    }
     void Update() { }
 
     public (float,float) PlayerMovementInput()   
@@ -51,5 +55,10 @@ public class InputManager: MonoBehaviour
     public bool Escape() 
     {
         return Input.GetKeyDown(KeyCode.Escape);
+    }
+
+    public bool Dash() 
+    {
+        return Input.GetKeyDown(KeyCode.LeftShift);
     }
 }

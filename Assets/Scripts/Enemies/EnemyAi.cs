@@ -7,8 +7,10 @@ using System;
 public class EnemyAi : MonoBehaviour
 {
     public Transform Target;
-    public float speed = 200f;
+    public float speed;
     public float nextWaypointDistance = 3f;
+
+    [HideInInspector]
     public EnemyStats _enemyStats;
     private Animator EnemyAnimator;
 
@@ -19,6 +21,7 @@ public class EnemyAi : MonoBehaviour
     private Seeker _seeker;
     private Rigidbody2D _enemyBody;
     public Vector2 Force;
+    public float speedCalc;
 
     // Start is called before the first frame update
     void Start()
@@ -71,6 +74,7 @@ public class EnemyAi : MonoBehaviour
         //Get direction to next waypoint along path, gives a vector that points from player to enemy
         Vector2 direction = ((Vector2)_path.vectorPath[currentWaypoint] - _enemyBody.position).normalized;
         Force = direction * speed * Time.deltaTime;
+        speedCalc = _enemyBody.velocity.x;
         _enemyBody.AddForce(Force);
         float distance = Vector2.Distance(_enemyBody.position, _path.vectorPath[currentWaypoint]);
 
@@ -83,12 +87,17 @@ public class EnemyAi : MonoBehaviour
 
     private void Update()
     {
+       //_enemyBody.velocity = Force;
         GetComponent<SpriteRenderer>().flipX = Target.position.x < transform.position.x;
     }
 
     public void EnemyDie()
     {
         EnemyAnimator.SetBool("Dead", true);
+        EnemyAnimator.SetBool("IsAttacking", false);
+        EnemyAnimator.SetBool("Attack1", false);
+        EnemyAnimator.SetBool("Attack2", false);
+
         GetComponent<Rigidbody2D>().gravityScale = 10;
         this.enabled = false;
         _seeker.enabled = false;
@@ -98,11 +107,12 @@ public class EnemyAi : MonoBehaviour
     public void TakeDamage(float damage)
     {
         EnemyAnimator.SetBool("TakeHit", true);
-        StartCoroutine(DamageFlash());
         float defenseValue = 100 - _enemyStats.Defence;
         string decimalValue = "0." + defenseValue;
         decimal actualDefenseValue = Convert.ToDecimal(decimalValue);
         float afterDamageHealth = _enemyStats.CurrentHealth - (damage * (float)actualDefenseValue);
+        StartCoroutine(DamageFlash());
+        EnemyAnimator.SetBool("TakeHit", false);
 
         if (afterDamageHealth <= 0)
         {
@@ -123,7 +133,6 @@ public class EnemyAi : MonoBehaviour
             GetComponent<SpriteRenderer>().color = Color.white;
             yield return new WaitForSeconds(0.1f);
         }
-        EnemyAnimator.SetBool("TakeHit", false);
     }
 
     public IEnumerator KillEnemy()
@@ -133,5 +142,4 @@ public class EnemyAi : MonoBehaviour
        yield return new WaitForSeconds(2f);
        Destroy(gameObject);
     }
-
 }

@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DashingState : State
 {
-    protected float dashForce;
 
     public DashingState(PlayerController playerController, StateMachine stateMachine) : base(playerController, stateMachine)
     {
@@ -25,27 +22,33 @@ public class DashingState : State
     {
         base.LogicUpdate();
 
-        if (!_playerController.GetComponent<InputManager>().Fire2())
+        if (!_playerController.GetComponent<InputManager>().Dash())
         {
-            //SoundManager.Instance.PlaySound(SoundManager.Instance.landing);
             _stateMachine.ChangeState(_playerController.standing);
         }
     }
 
     public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate();
+        base.PhysicsUpdate();      
     }
 
     private void Dash()
-    {        
-        //Hold button, set timescale
-        //Aim while in slow motion
-        //release button to dash through enemies
+    {
+    }
 
-        if (_playerController.GetComponent<InputManager>().Fire2()) 
-        {
-            Time.timeScale = 0.5f;
-        }
+    //private void AimAtReticle()
+    //{
+        //_playerController.PlayerAimArrow.SetActive(true);
+
+        //Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _playerController.PlayerAimArrow.transform.position;
+        //float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+        //Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.back);
+        //_playerController.PlayerAimArrow.transform.rotation = Quaternion.Slerp(_playerController.PlayerAimArrow.transform.rotation, rotation, angularSpeed * Time.deltaTime);
+    //}
+
+    private void ApplyDashForce(Vector2 input) 
+    {
+  
     }
 }

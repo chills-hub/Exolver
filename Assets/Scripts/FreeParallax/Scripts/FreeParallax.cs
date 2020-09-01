@@ -127,7 +127,7 @@ public class FreeParallax : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        DontDestroyOnLoad(gameObject);
 #if UNITY_EDITOR
 
         StartCoroutine(InitializeAfterSlightDelay());

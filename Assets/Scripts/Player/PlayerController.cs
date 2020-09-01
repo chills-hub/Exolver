@@ -6,10 +6,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //State Machine Stuff
+    [HideInInspector]
     public StateMachine movementSM;
+    [HideInInspector]
     public StandingState standing;
+    [HideInInspector]
     public DodgingState dodging;
+    [HideInInspector]
     public JumpingState jumping;
+    [HideInInspector]
     public DashingState dashing;
 
     //acessory injected instances
@@ -22,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider2D _playerCollider;
     private InteractionHelper _interactionHelper;
     private AudioSource _audioSource;
+    public GameObject PlayerAimArrow;
+    public GameObject ArrowPoint;
 
     //Inputs
     public float horizontalInput;
@@ -53,6 +60,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         currentHealth = PlayerStats.MaxHealth;
         movementSM = transform.gameObject.AddComponent<StateMachine>();
         _inputManager = transform.gameObject.AddComponent<InputManager>();

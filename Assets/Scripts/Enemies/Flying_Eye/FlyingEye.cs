@@ -41,7 +41,7 @@ public class FlyingEye : MonoBehaviour
 
     void PerformAttack2() 
     {
-            if (timeBtwShots <= 0)
+            if (timeBtwShots <= 0 && !EnemyAnimator.GetBool("Dead"))
             {
                 Instantiate(Fireball, transform.position, Quaternion.identity).GetComponent<Fireball>().Damage = GetComponent<EnemyAi>()._enemyStats.AttackDamage1;
                 timeBtwShots = startTimeBtwShots;

@@ -10,6 +10,7 @@ public class ReferenceHolder : MonoBehaviour
     public GameObject InteractArrow;
     public GameObject InteractArrowDungeon;
     public GameObject FadeToBlackImage;
+    public GameObject PlayerAimArrow;
     public TextMeshProUGUI HealthValueText;
     public TextMeshProUGUI DamageValueText;
     public TextMeshProUGUI DefenseValueText;
