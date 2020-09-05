@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\DDOL.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyAi.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyStats.cs" />
     <Compile Include="Assets\Scripts\Enemies\Flying_Eye\Fireball.cs" />
@@ -82,7 +83,9 @@
     <Compile Include="Assets\Scripts\Game Logic\MainMenuButtonScript.cs" />
     <Compile Include="Assets\Scripts\Game Logic\OptionsMenuButton.cs" />
     <Compile Include="Assets\Scripts\Game Logic\ReferenceHolder.cs" />
+    <Compile Include="Assets\Scripts\Game Logic\SaveCamBetweenScenes.cs" />
     <Compile Include="Assets\Scripts\Game Logic\SaveGame.cs" />
+    <Compile Include="Assets\Scripts\Game Logic\SpawnPlayerHere.cs" />
     <Compile Include="Assets\Scripts\Game Logic\StartGame.cs" />
     <Compile Include="Assets\Scripts\Game Logic\UpgradeHelper.cs" />
     <Compile Include="Assets\Scripts\Game Logic\UpgradeStats.cs" />
@@ -90,7 +93,6 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStats.cs" />
-    <Compile Include="Assets\Scripts\Player\State Machine\DashingState.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\DodgingState.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\GroundedState.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\JumpingState.cs" />

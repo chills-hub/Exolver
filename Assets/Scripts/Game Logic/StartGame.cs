@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class StartGame : MonoBehaviour
@@ -22,6 +23,7 @@ public class StartGame : MonoBehaviour
         Scene sceneToLoad = SceneManager.GetSceneByName("Gameplay");
         SceneManager.SetActiveScene(sceneToLoad);
         //SceneManager.UnloadSceneAsync("Main_Hub");
-        SceneManager.MoveGameObjectToScene(FindObjectOfType<PlayerController>().gameObject, sceneToLoad);
+       // SceneManager.MoveGameObjectToScene(FindObjectOfType<PlayerController>().gameObject, sceneToLoad);
+       // SceneManager.MoveGameObjectToScene(FindObjectOfType<GameManager>().gameObject, sceneToLoad);
     }
 }

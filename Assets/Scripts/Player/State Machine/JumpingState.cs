@@ -5,6 +5,15 @@ public class JumpingState : State
     {
     }
 
+    public static JumpingState CreateJumpingState(PlayerController playerController, StateMachine stateMachine)
+    {
+        GameObject jumping = new GameObject();
+        JumpingState jumpingState = jumping.AddComponent<JumpingState>();
+        jumpingState._playerController = playerController;
+        jumpingState._stateMachine = stateMachine;
+        return jumpingState;
+    }
+
     public override void Enter()
     {
         base.Enter();

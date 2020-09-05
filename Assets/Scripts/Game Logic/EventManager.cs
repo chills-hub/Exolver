@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class EventManager : MonoBehaviour
 {
@@ -22,83 +24,104 @@ public class EventManager : MonoBehaviour
 
     private PlayerController Player;
     private UpgradeStats UpgradeStats;
-    private ReferenceHolder _refHolder;
-    private GameManager _gameManager;
     private bool isUpgrading = false;
     private bool IsPaused = false;
+
+    [HideInInspector]
+    public GameObject Merchant;
+    [HideInInspector]
+    public GameObject InteractArrow;
+    [HideInInspector]
+    public GameObject InteractArrowDungeon;
+    [HideInInspector]
+    public GameObject MerchantUiPanel;
+    [HideInInspector]
+    public BoxCollider2D DungeonCollider;
+    [HideInInspector]
+    public GameObject MerchantSpeechPanel;
+    [HideInInspector]
+    public TextMeshProUGUI Pausedtext;
+    [HideInInspector]
+    public GameManager GameManager;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        DontDestroyOnLoad(this);
         Player = FindObjectOfType<PlayerController>();
-        _gameManager = this.gameObject.GetComponent<GameManager>();
-        _refHolder = _gameManager.GetComponent<ReferenceHolder>();
         UpgradeStats = new UpgradeStats();
     }
 
     // Update is called once per frame
     void Update()
     {
-        PlayerInteractShop();
-        PlayerInteractDungeon();
         PauseTheGameEvent();
+
+        //need to disable these on level 2 for pausing to work
+        if (GameManager.CurrentLevel == 1) 
+        {
+            PlayerInteractShop();
+            PlayerInteractDungeon();
+        }  
     }
 
     //Re-use this for dungeon entrance
     void PlayerInteractShop()
     {
-        if (Player.GetComponent<CapsuleCollider2D>().IsTouching(_refHolder.Merchant.transform.GetComponent<BoxCollider2D>()))
-        {
-            _refHolder.InteractArrow.SetActive(true);
-            if (Player._inputManager.GetInteractionInput())
+            if (Player.GetComponent<CapsuleCollider2D>().IsTouching(Merchant.transform.GetComponent<BoxCollider2D>()))
             {
-                Player.GetComponent<PlayerController>().enabled = false;
-                isUpgrading = true;
-                if (OnInteract != null)
-                    OnInteract();
+                InteractArrow.SetActive(true);
+                if (Player._inputManager.GetInteractionInput())
+                {
+                    Player.GetComponent<PlayerController>().enabled = false;
+                    isUpgrading = true;
+                    if (OnInteract != null)
+                        OnInteract();
+                }
             }
-        }
-        else
-        {
-            _refHolder.InteractArrow.SetActive(false);
-            isUpgrading = false;
-        }
+            else
+            {
+                InteractArrow.SetActive(false);
+                isUpgrading = false;
+            }
 
-        if (!isUpgrading && !_refHolder.MerchantUiPanel.activeInHierarchy)
-        {
-            Player.GetComponent<PlayerController>().enabled = true;
-        }
+            if (!isUpgrading && !MerchantUiPanel.activeInHierarchy)
+            {
+                Player.GetComponent<PlayerController>().enabled = true;
+            }
 
-        if (Player._inputManager.Escape())
-        {
-            CloseShopMenu();
-        }
+            if (Player._inputManager.Escape())
+            {
+                CloseShopMenu();
+            }
     }
 
     void PlayerInteractDungeon() 
     {
-        if (Player.GetComponent<CapsuleCollider2D>().IsTouching(_refHolder.DungeonCollider.GetComponentInChildren<BoxCollider2D>()))
+        if (Player.GetComponent<CapsuleCollider2D>().IsTouching(DungeonCollider.GetComponentInChildren<BoxCollider2D>()))
         {
-            _refHolder.InteractArrowDungeon.SetActive(true);
+            InteractArrowDungeon.SetActive(true);
             if (Player._inputManager.GetInteractionInput())
             {
+                StartCoroutine(GameManager.FadeToBlack(true));
                 if (OnInteractDungeon != null)
                     OnInteractDungeon();
             }
         }
         else
         {
-            _refHolder.InteractArrowDungeon.SetActive(false);
+            InteractArrowDungeon.SetActive(false);
         }
     }
 
     public void CloseShopMenu()
     {
         isUpgrading = false;
-        _refHolder.MerchantUiPanel.gameObject.SetActive(false);
-        _refHolder.MerchantSpeechPanel.gameObject.SetActive(false);
+        MerchantUiPanel.gameObject.SetActive(false);
+        MerchantSpeechPanel.gameObject.SetActive(false);
         Player.GetComponent<PlayerController>().enabled = true;
-        _gameManager.GetComponent<SaveGame>().Save();
+        GameManager.GetComponent<SaveGame>().Save();
     }
 
     public void PauseTheGameEvent()
@@ -111,7 +134,6 @@ public class EventManager : MonoBehaviour
         CheckPaused();
     }
 
-    //Might be able to put all these in one event call
     public void UpgradeHealthStat()
     {
         if (Player.PlayerStats.AvailableUpgradePoints > 0)
@@ -152,19 +174,16 @@ public class EventManager : MonoBehaviour
     {
         if (IsPaused)
         {
-            _gameManager._gameState = GameState.Paused;
+            GameManager._gameState = GameState.Paused;
             Time.timeScale = 0;
-            _refHolder.Pausedtext.gameObject.SetActive(true);
-            _refHolder.SaveButton.gameObject.SetActive(true);
-            CloseShopMenu();
+            Pausedtext.gameObject.SetActive(true);
         }
 
-        if (!IsPaused && _gameManager._gameState == GameState.Paused)
+        if (!IsPaused && GameManager._gameState == GameState.Paused)
         {
-            _gameManager._gameState = GameState.Active;
+            GameManager._gameState = GameState.Active;
             Time.timeScale = 1;
-            _refHolder.Pausedtext.gameObject.SetActive(false);
-            _refHolder.SaveButton.gameObject.SetActive(false);
+            Pausedtext.gameObject.SetActive(false);
         }
     }
 }

@@ -6,7 +6,7 @@ public class InputManager: MonoBehaviour
 {
     private void Start()
     {
-        DontDestroyOnLoad(this);
+       //DontDestroyOnLoad(this);
     }
     void Update() { }
 

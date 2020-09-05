@@ -1,9 +1,19 @@
 ﻿using System;
 using UnityEngine;
+using TMPro;
 
 public class UpgradeHelper : MonoBehaviour
 {
-    private ReferenceHolder _refHolder;
+    [HideInInspector]
+    public TextMeshProUGUI HealthValueText;
+    [HideInInspector]
+    public TextMeshProUGUI DamageValueText;
+    [HideInInspector]
+    public TextMeshProUGUI DefenseValueText;
+    [HideInInspector]
+    public TextMeshProUGUI LevelValueText;
+    [HideInInspector]
+    public TextMeshProUGUI UpgradePointsValueText;
 
     // Start is called before the first frame update
     void Start()
@@ -11,7 +21,6 @@ public class UpgradeHelper : MonoBehaviour
         EventManager.UpgradePlayerHealth += IncrementHealth;
         EventManager.UpgradePlayerDamage += IncrementDamage;
         EventManager.UpgradePlayerDefense += IncrementDefense;
-        _refHolder = FindObjectOfType<GameManager>().GetComponent<ReferenceHolder>();
     }
 
     private void OnDisable()
@@ -27,23 +36,23 @@ public class UpgradeHelper : MonoBehaviour
     /// </summary>
     public void IncrementHealth(float newValue, int newLevel, int availablePoints) 
     {
-        _refHolder.HealthValueText.text = newValue.ToString();
-        _refHolder.LevelValueText.text = newLevel.ToString();
-        _refHolder.UpgradePointsValueText.text = availablePoints.ToString();
+        HealthValueText.text = newValue.ToString();
+        LevelValueText.text = newLevel.ToString();
+        UpgradePointsValueText.text = availablePoints.ToString();
     }
 
     public void IncrementDamage(float newValue, int newLevel, int availablePoints)
     {
-        _refHolder.DamageValueText.text = newValue.ToString();
-        _refHolder.LevelValueText.text = newLevel.ToString();
-        _refHolder.UpgradePointsValueText.text = availablePoints.ToString();
+        DamageValueText.text = newValue.ToString();
+        LevelValueText.text = newLevel.ToString();
+        UpgradePointsValueText.text = availablePoints.ToString();
     }
 
     public void IncrementDefense(int newValue, int newLevel, int availablePoints)
     {
-        _refHolder.DefenseValueText.text = newValue.ToString();
-        _refHolder.LevelValueText.text = newLevel.ToString();
-        _refHolder.UpgradePointsValueText.text = availablePoints.ToString();
+        DefenseValueText.text = newValue.ToString();
+        LevelValueText.text = newLevel.ToString();
+        UpgradePointsValueText.text = availablePoints.ToString();
     }
 
     /// <summary>

@@ -3,7 +3,10 @@
 public class StateMachine : MonoBehaviour
 {
     public State CurrentState { get; private set; }
-
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
     public void Initialise(State startingState) 
     {
         CurrentState = startingState;

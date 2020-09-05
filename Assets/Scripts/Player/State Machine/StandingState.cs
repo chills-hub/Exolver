@@ -3,10 +3,20 @@ public class StandingState : GroundedState
 {
     private bool jump;
     private bool dodge;
-    private bool dash;
 
     public StandingState(PlayerController playerController, StateMachine stateMachine) : base(playerController, stateMachine)
     {
+
+    }
+
+    //newing up the states caused issues with scene transition, need a static method to get around this, can do constructor work here 
+    public static StandingState CreateStandingState(PlayerController playerController, StateMachine stateMachine)
+    {
+        GameObject standing = new GameObject();
+        StandingState standingState = standing.AddComponent<StandingState>();
+        standingState._playerController = playerController;
+        standingState._stateMachine = stateMachine;
+        return standingState;
     }
 
     public override void Enter()
@@ -22,7 +32,6 @@ public class StandingState : GroundedState
         base.HandleInput();
         jump = _playerController._inputManager.PlayerJumpInput();
         dodge = _playerController._inputManager.Dodge();
-        dash = _playerController._inputManager.Dash();
     }
 
     public override void LogicUpdate()
@@ -35,10 +44,6 @@ public class StandingState : GroundedState
         if (jump && _playerController.isGrounded)
         {
             _stateMachine.ChangeState(_playerController.jumping);
-        }
-        if (dash)
-        {
-            _stateMachine.ChangeState(_playerController.dashing);
         }
     }
 }

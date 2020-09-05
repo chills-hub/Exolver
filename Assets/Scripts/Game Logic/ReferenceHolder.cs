@@ -6,11 +6,11 @@ public class ReferenceHolder : MonoBehaviour
 {
     public GameObject MerchantUiPanel;
     public GameObject MerchantSpeechPanel;
-    public GameObject Merchant;
     public GameObject InteractArrow;
     public GameObject InteractArrowDungeon;
     public GameObject FadeToBlackImage;
     public GameObject PlayerAimArrow;
+    public GameObject MerchantTrigger;
     public TextMeshProUGUI HealthValueText;
     public TextMeshProUGUI DamageValueText;
     public TextMeshProUGUI DefenseValueText;
@@ -25,24 +25,49 @@ public class ReferenceHolder : MonoBehaviour
     public BoxCollider2D DungeonCollider;
     //Upgrade Button
     public Button CloseUpgradeMenu;
+    //Healthbar
+    public HealthBar Healthbar;
+    //GameManager
+    public GameManager GameManager;
+    //EventManager
+    public EventManager EventManager;
+    //Player
+    public PlayerController Player;
 
-    static ReferenceHolder refHolderInstance;
-
-    private void Awake()
+    private void Start()
     {
-        if (refHolderInstance == null)
-        {
-            //First run, set the instance
-            refHolderInstance = this;
-            DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this);        
+    }
 
-        }
-        else if (refHolderInstance != this)
+    private void OnLevelWasLoaded(int level)
+    {
+        GameManager.Healthbar = Healthbar;
+        GameManager.FadeToBlackImage = FadeToBlackImage;
+        GameManager.GameOverText = GameOverText;
+        EventManager.GameManager = GameManager;
+        EventManager.Pausedtext = Pausedtext;
+        Player.gameObject.AddComponent<InteractionHelper>();
+
+        if (level == 1)//aka main hub, only need these in that area
         {
-            //Instance is not the same as the one we have, destroy old one, and reset to newest one
-            Destroy(refHolderInstance.gameObject);
-            refHolderInstance = this;
-            DontDestroyOnLoad(this);
+            EventManager.InteractArrow = InteractArrow;
+            EventManager.Merchant = MerchantTrigger;
+            EventManager.MerchantUiPanel = MerchantUiPanel;
+            EventManager.InteractArrowDungeon = InteractArrowDungeon;
+            EventManager.DungeonCollider = DungeonCollider;
+            EventManager.MerchantSpeechPanel = MerchantSpeechPanel;
+            Player.GetComponent<InteractionHelper>().MerchantUiPanel = MerchantUiPanel;
+            Player.GetComponent<InteractionHelper>().MerchantSpeechPanel = MerchantSpeechPanel;
+            Player.GetComponent<InteractionHelper>().HealthValueText = HealthValueText;
+            Player.GetComponent<InteractionHelper>().DamageValueText = DamageValueText;
+            Player.GetComponent<InteractionHelper>().DefenseValueText = DefenseValueText;
+            Player.GetComponent<InteractionHelper>().LevelValueText = LevelValueText;
+            Player.GetComponent<InteractionHelper>().UpgradePointsValueText = UpgradePointsValueText;
+            GameManager.GetComponent<UpgradeHelper>().HealthValueText = HealthValueText;
+            GameManager.GetComponent<UpgradeHelper>().DefenseValueText = DefenseValueText;
+            GameManager.GetComponent<UpgradeHelper>().DamageValueText = DamageValueText;
+            GameManager.GetComponent<UpgradeHelper>().UpgradePointsValueText = UpgradePointsValueText;
+            GameManager.GetComponent<UpgradeHelper>().LevelValueText = LevelValueText;
         }
     }
 }

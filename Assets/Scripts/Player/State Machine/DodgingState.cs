@@ -6,6 +6,15 @@ public class DodgingState : State
     public DodgingState(PlayerController playerController, StateMachine stateMachine) : base(playerController, stateMachine)
     {
     }
+    public static DodgingState CreateDodgingState(PlayerController playerController, StateMachine stateMachine)
+    {
+        GameObject standing = new GameObject();
+        DodgingState dodgingState = standing.AddComponent<DodgingState>();
+        dodgingState._playerController = playerController;
+        dodgingState._stateMachine = stateMachine;
+        return dodgingState;
+    }
+
     public override void Enter()
     {
         base.Enter();

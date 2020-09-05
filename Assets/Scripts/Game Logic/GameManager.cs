@@ -8,12 +8,18 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public HealthBar Healthbar;
-    public PlayerController Player;
+    private PlayerController Player;
+    public int CurrentLevel;
     public GameState _gameState = new GameState();
+
+    [HideInInspector]
+    public HealthBar Healthbar;
+    [HideInInspector]
+    public GameObject FadeToBlackImage;
+    [HideInInspector]
+    public TextMeshProUGUI GameOverText;
     [HideInInspector]
     public StartGame startGame;
-    private ReferenceHolder referenceHolder;
     [HideInInspector]
     public SaveGame Loader;
 
@@ -37,15 +43,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnLevelWasLoaded(int level)
+    {
+        CurrentLevel = level;
+        if (level == 2) 
+        {
+            SetPlayerHealth();
+            //SetBlackoutAlphaTo1();
+            StartCoroutine(FadeToBlack(false));
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         Loader = gameObject.GetComponent<SaveGame>();
         startGame = gameObject.AddComponent<StartGame>();
-        referenceHolder = this.GetComponent<ReferenceHolder>();
+        Player = FindObjectOfType<PlayerController>();
         SetBlackoutAlphaTo1();
         StartCoroutine(FadeToBlack(false));
-        SetPlayerHealth();
+        SetPlayerHealthInitial();
 
         if (StartGame.IsPlayerLoading) 
         {
@@ -92,9 +109,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SetPlayerHealth() 
+    void SetPlayerHealthInitial() 
     {
         Player.PlayerStats = new PlayerStats();
+        Healthbar.SetHealth(Player.PlayerStats.MaxHealth);
+    }
+
+    void SetPlayerHealth() 
+    {
         Healthbar.SetHealth(Player.PlayerStats.MaxHealth);
     }
 
@@ -110,43 +132,43 @@ public class GameManager : MonoBehaviour
 
     void SetBlackoutAlphaTo1() 
     {
-        Color objectColor = referenceHolder.FadeToBlackImage.GetComponent<Image>().color;
+        Color objectColor = FadeToBlackImage.GetComponent<Image>().color;
         objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, 1);
-        referenceHolder.FadeToBlackImage.GetComponent<Image>().color = objectColor;
+        FadeToBlackImage.GetComponent<Image>().color = objectColor;
     }
 
     private IEnumerator WaitForEndGame() 
     {
-        referenceHolder.GameOverText.gameObject.SetActive(true);
+        GameOverText.gameObject.SetActive(true);
         Player.jumpForce = 0;
         yield return new WaitForSeconds(1f);
         EndGameDialogue();
     }
 
-    private IEnumerator FadeToBlack(bool fadeToBlack = true, float fadeSpeed = 0.5f) 
+    public IEnumerator FadeToBlack(bool fadeToBlack = true, float fadeSpeed = 0.5f) 
     {
-        Color objectColor = referenceHolder.FadeToBlackImage.GetComponent<Image>().color;
+        Color objectColor = FadeToBlackImage.GetComponent<Image>().color;
         float fadeAmount;
 
         if (fadeToBlack)
         {
-            while (referenceHolder.FadeToBlackImage.GetComponent<Image>().color.a < 1)
+            while (FadeToBlackImage.GetComponent<Image>().color.a < 1)
             {
                 fadeAmount = objectColor.a + (fadeSpeed * Time.deltaTime);
 
                 objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
-                referenceHolder.FadeToBlackImage.GetComponent<Image>().color = objectColor;
+                FadeToBlackImage.GetComponent<Image>().color = objectColor;
                 yield return null;
             }
         }
         else 
         {
-            while (referenceHolder.FadeToBlackImage.GetComponent<Image>().color.a > 0)
+            while (FadeToBlackImage.GetComponent<Image>().color.a > 0)
             {
                 fadeAmount = objectColor.a - (fadeSpeed * Time.deltaTime);
 
                 objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
-                referenceHolder.FadeToBlackImage.GetComponent<Image>().color = objectColor;
+                FadeToBlackImage.GetComponent<Image>().color = objectColor;
                 yield return null;
             }
         }

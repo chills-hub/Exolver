@@ -6,7 +6,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //State Machine Stuff
-    [HideInInspector]
     public StateMachine movementSM;
     [HideInInspector]
     public StandingState standing;
@@ -14,8 +13,6 @@ public class PlayerController : MonoBehaviour
     public DodgingState dodging;
     [HideInInspector]
     public JumpingState jumping;
-    [HideInInspector]
-    public DashingState dashing;
 
     //acessory injected instances
     public InputManager _inputManager;
@@ -25,7 +22,6 @@ public class PlayerController : MonoBehaviour
     private PlayerMovement _playerMovement;
     private Vector2 _movement;
     private CapsuleCollider2D _playerCollider;
-    private InteractionHelper _interactionHelper;
     private AudioSource _audioSource;
     public GameObject PlayerAimArrow;
     public GameObject ArrowPoint;
@@ -54,27 +50,26 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public float moveSpeed = 10f;
+    public InteractionHelper InteractionHelper;
 
     public PlayerStats PlayerStats { get; set;}
 
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
         currentHealth = PlayerStats.MaxHealth;
-        movementSM = transform.gameObject.AddComponent<StateMachine>();
+        movementSM = GetComponent<StateMachine>();
         _inputManager = transform.gameObject.AddComponent<InputManager>();
         PlayerBody = transform.gameObject.GetComponent<Rigidbody2D>();
         _animator = transform.gameObject.GetComponent<Animator>();
         _playerMovement = transform.gameObject.AddComponent<PlayerMovement>();
         _playerCollider = transform.gameObject.GetComponent<CapsuleCollider2D>();
-        _interactionHelper = transform.gameObject.AddComponent<InteractionHelper>();
         _parallax = FindObjectOfType<Camera>().GetComponentInChildren<FreeParallax>();
         _audioSource = transform.gameObject.GetComponent<AudioSource>();
-        standing = new StandingState(this, movementSM);
-        dodging = new DodgingState(this, movementSM);
-        jumping = new JumpingState(this, movementSM);
-        dashing = new DashingState(this, movementSM);
+        standing = StandingState.CreateStandingState(this, movementSM);
+        dodging = DodgingState.CreateDodgingState(this, movementSM);
+        jumping = JumpingState.CreateJumpingState(this, movementSM);
         movementSM.Initialise(standing);
         _audioSource.Play();
         _audioSource.Pause();

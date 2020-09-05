@@ -1,10 +1,25 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class InteractionHelper : MonoBehaviour
 {
-    private ReferenceHolder _refHolder;
     private PlayerController player;
     private GameManager gameManager;
+
+    [HideInInspector]
+    public GameObject MerchantUiPanel;
+    [HideInInspector]
+    public GameObject MerchantSpeechPanel;
+    [HideInInspector]
+    public TextMeshProUGUI HealthValueText;
+    [HideInInspector]
+    public TextMeshProUGUI DamageValueText;
+    [HideInInspector]
+    public TextMeshProUGUI DefenseValueText;
+    [HideInInspector]
+    public TextMeshProUGUI LevelValueText;
+    [HideInInspector]
+    public TextMeshProUGUI UpgradePointsValueText;
 
     private void OnDisable()
     {
@@ -18,25 +33,18 @@ public class InteractionHelper : MonoBehaviour
         EventManager.OnInteract += Interact;
         EventManager.OnInteractDungeon += InteractDungeon;
         gameManager = FindObjectOfType<GameManager>();
-        _refHolder = gameManager.GetComponent<ReferenceHolder>();
         player = FindObjectOfType<PlayerController>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void Interact()
     {
-        _refHolder.MerchantUiPanel.SetActive(true);
-        _refHolder.MerchantSpeechPanel.SetActive(true);
-        _refHolder.HealthValueText.text = player.PlayerStats.MaxHealth.ToString();
-        _refHolder.DamageValueText.text = player.PlayerStats.Damage.ToString();
-        _refHolder.DefenseValueText.text = player.PlayerStats.Defense.ToString();
-        _refHolder.LevelValueText.text = player.PlayerStats.Level.ToString();
-        _refHolder.UpgradePointsValueText.text = player.PlayerStats.AvailableUpgradePoints.ToString();
+        MerchantUiPanel.SetActive(true);
+        MerchantSpeechPanel.SetActive(true);
+        HealthValueText.text = player.PlayerStats.MaxHealth.ToString();
+        DamageValueText.text = player.PlayerStats.Damage.ToString();
+        DefenseValueText.text = player.PlayerStats.Defense.ToString();
+        LevelValueText.text = player.PlayerStats.Level.ToString();
+        UpgradePointsValueText.text = player.PlayerStats.AvailableUpgradePoints.ToString();
     }
 
     void InteractDungeon() 
