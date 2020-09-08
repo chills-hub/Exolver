@@ -89,6 +89,7 @@
     <Compile Include="Assets\Scripts\Game Logic\StartGame.cs" />
     <Compile Include="Assets\Scripts\Game Logic\UpgradeHelper.cs" />
     <Compile Include="Assets\Scripts\Game Logic\UpgradeStats.cs" />
+    <Compile Include="Assets\Scripts\LevelGenerator.cs" />
     <Compile Include="Assets\Scripts\Player\InteractionHelper.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />

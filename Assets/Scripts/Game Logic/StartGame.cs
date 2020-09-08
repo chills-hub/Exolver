@@ -19,11 +19,21 @@ public class StartGame : MonoBehaviour
 
     public void EnterGameplay() 
     {
-        SceneManager.LoadScene("Gameplay");
-        Scene sceneToLoad = SceneManager.GetSceneByName("Gameplay");
-        SceneManager.SetActiveScene(sceneToLoad);
+        StartCoroutine(LoadSceneAsync(2));
+       // Scene sceneToLoad = SceneManager.GetSceneByName("Gameplay");
+       // SceneManager.SetActiveScene(sceneToLoad);
+       
         //SceneManager.UnloadSceneAsync("Main_Hub");
-       // SceneManager.MoveGameObjectToScene(FindObjectOfType<PlayerController>().gameObject, sceneToLoad);
-       // SceneManager.MoveGameObjectToScene(FindObjectOfType<GameManager>().gameObject, sceneToLoad);
+    }
+
+    private IEnumerator LoadSceneAsync(int sceneIndex) 
+    {
+        AsyncOperation loadLevel = SceneManager.LoadSceneAsync(sceneIndex);
+        while (!loadLevel.isDone) 
+        {
+            Debug.Log(loadLevel.progress);
+            yield return null;
+
+        }
     }
 }
