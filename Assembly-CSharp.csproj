@@ -64,10 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DDOL.cs" />
+    <Compile Include="Assets\Scripts\DistanceLogging.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyAi.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyStats.cs" />
     <Compile Include="Assets\Scripts\Enemies\Flying_Eye\Fireball.cs" />
     <Compile Include="Assets\Scripts\Enemies\Flying_Eye\FlyingEye.cs" />
+    <Compile Include="Assets\Scripts\Enemies\Mushroom\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Enemies\Skeleton\Skeleton.cs" />
     <Compile Include="Assets\Scripts\FreeParallax\Scripts\FreeParallax.cs" />
     <Compile Include="Assets\Scripts\FreeParallax\Scripts\FreeParallaxDemo.cs" />

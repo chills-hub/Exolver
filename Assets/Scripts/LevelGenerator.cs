@@ -36,7 +36,7 @@ public class LevelGenerator : MonoBehaviour
     private void SpawnBlockAhead(Vector3 position) 
     {
         NextPosition = position + new Vector3(40, 0, 0);
-        Instantiate(LevelBlocks[0], NextPosition, Quaternion.identity);
+        Instantiate(LevelBlocks[Random.Range(0,3)], NextPosition, Quaternion.identity);
         LastPosition = NextPosition;
     }
 }

@@ -21,8 +21,22 @@ public class PlayerStats
     /// The player's number of upgrade points
     /// </summary>
     public int AvailableUpgradePoints { get; set; } = 0;
+    public float CurrentExpTowardsExpPoint { get; set; } = 0;
+    public float ExpPointThreshold { get; set; } = 100;
     public PlayerStats()
     {
+    }
+
+    /// <summary>
+    /// Purpose of this method will be to increase the amount of experience needed to get a single upgrade point as your level increases
+    /// </summary>
+    public void ShouldIncrementCostOfUpgradePoint()
+    {
+        if (CurrentExpTowardsExpPoint >= ExpPointThreshold) 
+        {
+            ExpPointThreshold += 100;
+            AvailableUpgradePoints++;
+        }
     }
 
 }

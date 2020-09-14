@@ -54,12 +54,4 @@ public class UpgradeHelper : MonoBehaviour
         LevelValueText.text = newLevel.ToString();
         UpgradePointsValueText.text = availablePoints.ToString();
     }
-
-    /// <summary>
-    /// Purpose of this method will be to increase the amount of experience needed to get a single upgrade point as your level increases
-    /// </summary>
-    public void IncrementCostOfUpgradePoint()
-    {
-        throw new NotImplementedException();
-    }
 }

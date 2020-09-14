@@ -19,7 +19,8 @@ public class Skeleton : MonoBehaviour
     #endregion
 
     #region private vars
-    private RaycastHit2D hit;
+    private RaycastHit2D hitLeft;
+    private RaycastHit2D hitRight;
     private bool attackMode;
     private bool inRange;
     private bool coolDown;
@@ -44,16 +45,18 @@ public class Skeleton : MonoBehaviour
 
         if (inRange)
         {
-            hit = Physics2D.Raycast(rayCast.position, Vector2.left, rayCastLength, rayCastMask);
+            _enemyAnimator.SetBool("Moving", false);
+            hitLeft = Physics2D.Raycast(rayCast.position, Vector2.left, rayCastLength, rayCastMask);
+            hitRight = Physics2D.Raycast(rayCast.position, Vector2.right, rayCastLength, rayCastMask);
             RaycastDebugger();
         }
 
         //player is in range
-        if (hit.collider != null)
+        if (hitLeft.collider != null || hitRight.collider != null)
         {
             PerformAttack();
         }
-        else if (hit.collider == null)
+        else if (hitLeft.collider == null || hitRight.collider == null)
         {
             inRange = false;
         }
@@ -85,7 +88,6 @@ public class Skeleton : MonoBehaviour
     {
         coolDownTimer = intTimer;
         _enemyAnimator.SetBool("IsAttacking", true);
-        _enemyAnimator.SetBool("Moving", false);
     }
 
     void ApplyDamageToPlayer() 

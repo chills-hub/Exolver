@@ -51,6 +51,10 @@ public class PlayerController : MonoBehaviour
     public float lowJumpMultiplier = 2f;
     public float moveSpeed = 10f;
     public InteractionHelper InteractionHelper;
+    private float intTimer;
+    private bool coolDown;
+    private float coolDownTimer = 0.2f;
+
 
     public PlayerStats PlayerStats { get; set;}
 
@@ -150,6 +154,24 @@ public class PlayerController : MonoBehaviour
                 force.Normalize();
                 collider.GetComponent<Rigidbody2D>().AddForce(-force * 600f);
             }
+        }
+
+        TriggerCooling();
+    }
+
+    public void TriggerCooling()
+    {
+        coolDown = true;
+    }
+
+    void CoolDown()
+    {
+        coolDownTimer -= Time.deltaTime;
+
+        if (coolDownTimer <= 0 && coolDown)
+        {
+            coolDown = false;
+            coolDownTimer = intTimer;
         }
     }
 

@@ -104,7 +104,7 @@ public class EventManager : MonoBehaviour
             InteractArrowDungeon.SetActive(true);
             if (Player._inputManager.GetInteractionInput())
             {
-             //   StartCoroutine(GameManager.FadeToBlack(true));
+             //StartCoroutine(GameManager.FadeToBlack(true));
                 if (OnInteractDungeon != null)
                     OnInteractDungeon();
             }
@@ -117,6 +117,7 @@ public class EventManager : MonoBehaviour
 
     public void CloseShopMenu()
     {
+
         isUpgrading = false;
         MerchantUiPanel.gameObject.SetActive(false);
         MerchantSpeechPanel.gameObject.SetActive(false);
@@ -130,7 +131,6 @@ public class EventManager : MonoBehaviour
       {
          IsPaused = !IsPaused;
       }
-
         CheckPaused();
     }
 

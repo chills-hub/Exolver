@@ -22,6 +22,7 @@ public class EnemyAi : MonoBehaviour
     private Rigidbody2D _enemyBody;
     public Vector2 Force;
     public float speedCalc;
+    private ReferenceHolder _refHolder;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,7 @@ public class EnemyAi : MonoBehaviour
         _seeker = GetComponent<Seeker>();
         EnemyAnimator = GetComponent<Animator>();
         _enemyStats = GetComponent<EnemyStats>();
-
+        _refHolder = FindObjectOfType<ReferenceHolder>();
         //Start a waypoint path to the player
         InvokeRepeating("UpdatePath", 0f, 0.5f);
         _enemyStats.CurrentHealth = _enemyStats.Health;
@@ -97,7 +98,8 @@ public class EnemyAi : MonoBehaviour
         EnemyAnimator.SetBool("IsAttacking", false);
         EnemyAnimator.SetBool("Attack1", false);
         EnemyAnimator.SetBool("Attack2", false);
-
+        _refHolder.Player.PlayerStats.CurrentExpTowardsExpPoint += _enemyStats.CurrentExpWorth;
+        _refHolder.Player.PlayerStats.ShouldIncrementCostOfUpgradePoint();
         GetComponent<Rigidbody2D>().gravityScale = 10;
         this.enabled = false;
         _seeker.enabled = false;
