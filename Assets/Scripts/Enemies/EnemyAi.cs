@@ -140,6 +140,7 @@ public class EnemyAi : MonoBehaviour
     public IEnumerator KillEnemy()
     {
         _enemyBody.Sleep();
+        _enemyBody.constraints = RigidbodyConstraints2D.FreezeAll;
         _enemyBody.velocity = Vector2.zero;
        yield return new WaitForSeconds(2f);
        Destroy(gameObject);

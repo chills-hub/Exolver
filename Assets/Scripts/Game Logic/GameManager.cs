@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     private PlayerController Player;
     public int CurrentLevel;
     public GameState _gameState = new GameState();
+    private AudioSource _audioSource;
 
     [HideInInspector]
     public HealthBar Healthbar;
@@ -51,12 +52,26 @@ public class GameManager : MonoBehaviour
             SetPlayerHealth();
             //SetBlackoutAlphaTo1();
             StartCoroutine(FadeToBlack(false));
+            //for now just stopping, need to change song
+            _audioSource.Stop();
+
+            //Initialise statemachine again
+            InitStateMachine();
         }
+    }
+
+    private void InitStateMachine() 
+    {
+        Player.standing = StandingState.CreateStandingState(Player, Player.movementSM);
+        Player.dodging = DodgingState.CreateDodgingState(Player, Player.movementSM);
+        Player.jumping = JumpingState.CreateJumpingState(Player, Player.movementSM);
+        Player.movementSM.Initialise(Player.standing);
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         Loader = gameObject.GetComponent<SaveGame>();
         startGame = gameObject.AddComponent<StartGame>();
         Player = FindObjectOfType<PlayerController>();

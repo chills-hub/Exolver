@@ -8,7 +8,7 @@ public class PlayerStats
     /// <summary>
     /// The player's damage modifier
     /// </summary>
-    public float Damage { get; set; } = 5f;
+    public float Damage { get; set; } = 50f;
     /// <summary>
     /// The player's defence modifier, base is full damage e.g 100%
     /// </summary>

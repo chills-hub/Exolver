@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public JumpingState jumping;
 
     //acessory injected instances
+    [HideInInspector]
     public InputManager _inputManager;
     public Rigidbody2D PlayerBody;   
     public Animator _animator;
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
         DontDestroyOnLoad(this);
         currentHealth = PlayerStats.MaxHealth;
         movementSM = GetComponent<StateMachine>();
-        _inputManager = transform.gameObject.AddComponent<InputManager>();
+        _inputManager = transform.gameObject.GetComponent<InputManager>();
         PlayerBody = transform.gameObject.GetComponent<Rigidbody2D>();
         _animator = transform.gameObject.GetComponent<Animator>();
         _playerMovement = transform.gameObject.AddComponent<PlayerMovement>();
@@ -149,6 +150,8 @@ public class PlayerController : MonoBehaviour
 
             if (!collider.CompareTag("Projectile")) 
             {
+                //testing if it feels better to apply the damage at end of animation
+                StartCoroutine(DamageWait());
                 collider.GetComponent<EnemyAi>().TakeDamage(PlayerStats.Damage);
                 var force = transform.position - collider.transform.position;
                 force.Normalize();
@@ -256,6 +259,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.name == "WaterSprite") 
+        {
+            currentHealth = 0;
+        }
+    }
+
     #region Coroutines
     IEnumerator AttackWait()
     {
@@ -267,6 +278,11 @@ public class PlayerController : MonoBehaviour
         }
         PlayerBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         isAttacking = false;
+    }
+
+    IEnumerator DamageWait()
+    {
+        yield return new WaitForSeconds(0.2f);
     }
 
     public IEnumerator DamageFlash()

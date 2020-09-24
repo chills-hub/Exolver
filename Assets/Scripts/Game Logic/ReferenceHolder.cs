@@ -23,6 +23,11 @@ public class ReferenceHolder : MonoBehaviour
     public Button UpgradeDefenseButtonArrow;
     public Button SaveButton;
     public BoxCollider2D DungeonCollider;
+    public Button AttackButton;
+    public Button JumpButton;
+    public Button InteractButton;
+    public Button SlideButton;
+
     //Upgrade Button
     public Button CloseUpgradeMenu;
     //Healthbar

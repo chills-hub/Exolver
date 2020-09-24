@@ -1,50 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class InputManager: MonoBehaviour 
 {
+    [HideInInspector]
+    public Joystick joystick;
+
+    public Button AttackButton;
+    public Button InteractButton;
+    public Button JumpButton;
+    public Button DodgeButton;
+
     private void Start()
     {
-       //DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
+        joystick = FindObjectOfType<Joystick>();
     }
-    void Update() { }
 
     public (float,float) PlayerMovementInput()   
     {
-        float xInput = Input.GetAxisRaw("Horizontal");
-        float yInput = Input.GetAxisRaw("Vertical");
+        //float xInput = Input.GetAxisRaw("Horizontal");
+        //float yInput = Input.GetAxisRaw("Vertical");
+        float xInput = joystick.Horizontal;
+        float yInput = joystick.Vertical;
         return (xInput, yInput);
     }
 
     public bool GetInteractionInput() 
     {
-        return Input.GetKeyDown(KeyCode.W);
+      //return Input.GetKeyDown(KeyCode.W);
+        return InteractButton.GetComponent<TouchButtonInteract>().interact;
     }
 
-    public bool PlayerJumpInput() 
+    public bool PlayerJumpInput()
     {
-        bool jumped = false;
+        //bool jumped = false;
 
-        if (Input.GetButtonDown("Jump")) 
-        {
-            jumped = true;
-        }
-        return jumped;
+        //if (Input.GetButtonDown("Jump")) 
+        //{
+        //    jumped = true;
+        //}
+        //if (JumpButton.GetComponent<TouchButtonJump>().jump) 
+        //{
+        //    jumped = true;
+        //}
+
+        return JumpButton.GetComponent<TouchButtonJump>().jump;
     }
 
     public bool Dodge()
     {
-        return Input.GetButtonDown("Sprint");
+        //return Input.GetButtonDown("Sprint");
+        return DodgeButton.GetComponent<TouchButtonDodge>().dodge;
     }
 
     public bool Fire1() 
     {
-        return Input.GetMouseButtonDown(0);
-    }
-    public bool Fire2()
-    {
-        return Input.GetMouseButton(1);
+        //return Input.GetMouseButtonDown(0);
+        return AttackButton.GetComponent<TouchButtonAttack>().attack;
     }
 
     public bool Pause()
@@ -57,8 +70,5 @@ public class InputManager: MonoBehaviour
         return Input.GetKeyDown(KeyCode.Escape);
     }
 
-    public bool Dash() 
-    {
-        return Input.GetKeyDown(KeyCode.LeftShift);
-    }
+
 }

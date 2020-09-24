@@ -151,9 +151,9 @@ public class Skeleton : MonoBehaviour
         else { Debug.DrawRay(rayCast.position, Vector2.left * rayCastLength, Color.green); }
     }
 
-    public void MoveToFloor() 
+    public void MoveToFloor()
     {
-        transform.position = transform.position - new Vector3(0, 0.75f, 0);
+        transform.position = transform.position - new Vector3(0, 0.60f, 0);
     }
 
     #region flip character (just for reference)
