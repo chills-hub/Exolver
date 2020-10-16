@@ -27,6 +27,7 @@ public class ReferenceHolder : MonoBehaviour
     public Button JumpButton;
     public Button InteractButton;
     public Button SlideButton;
+    public Joystick Joystick;
 
     //Upgrade Button
     public Button CloseUpgradeMenu;
@@ -39,9 +40,24 @@ public class ReferenceHolder : MonoBehaviour
     //Player
     public PlayerController Player;
 
-    private void Start()
+    static ReferenceHolder referenceHolderInstance;
+
+    private void Awake()
     {
-        DontDestroyOnLoad(this);        
+        DontDestroyOnLoad(gameObject);
+
+        if (referenceHolderInstance == null)
+        {
+            //First run, set the instance
+            referenceHolderInstance = this;
+
+        }
+        else if (referenceHolderInstance != this)
+        {
+            //Instance is not the same as the one we have, destroy old one, and reset to newest one
+            Destroy(referenceHolderInstance.gameObject);
+            referenceHolderInstance = this;
+        }
     }
 
     private void OnLevelWasLoaded(int level)
@@ -52,6 +68,7 @@ public class ReferenceHolder : MonoBehaviour
         EventManager.GameManager = GameManager;
         EventManager.Pausedtext = Pausedtext;
         Player.gameObject.AddComponent<InteractionHelper>();
+        Player.gameObject.GetComponent<InteractionHelper>().gameManager = GameManager;
 
         if (level == 1)//aka main hub, only need these in that area
         {

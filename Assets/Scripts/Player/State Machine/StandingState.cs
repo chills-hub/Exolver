@@ -40,9 +40,10 @@ public class StandingState : GroundedState
         {
             _stateMachine.ChangeState(_playerController.dodging);
         }
-        if (jump && _playerController.isGrounded)
+        if (_playerController.canJump && jump && _playerController.isGrounded )
         {
             _stateMachine.ChangeState(_playerController.jumping);
+            StartCoroutine(_playerController.JumpCooldown());
         }
     }
 }

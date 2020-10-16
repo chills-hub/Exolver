@@ -71,6 +71,7 @@
     <Compile Include="Assets\Prefabs\Joystick Pack\Scripts\Joysticks\FloatingJoystick.cs" />
     <Compile Include="Assets\Prefabs\Joystick Pack\Scripts\Joysticks\VariableJoystick.cs" />
     <Compile Include="Assets\Scripts\DDOL.cs" />
+    <Compile Include="Assets\Scripts\DeleteBlock.cs" />
     <Compile Include="Assets\Scripts\DistanceLogging.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyAi.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyStats.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Assets\Scripts\Game Logic\WaterFollowPlayer.cs" />
     <Compile Include="Assets\Scripts\Player\InteractionHelper.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
-    <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMovementTester.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\DodgingState.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\GroundedState.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="Assets\Scripts\Player\State Machine\StandingState.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\State.cs" />
     <Compile Include="Assets\Scripts\Player\State Machine\StateMachine.cs" />
+    <Compile Include="Assets\Scripts\Save2dLight.cs" />
+    <Compile Include="Assets\Scripts\SaveGui.cs" />
     <Compile Include="Assets\Scripts\SaveSystem\Example\Scripts\CryptographyExample.cs" />
     <Compile Include="Assets\Scripts\SaveSystem\Example\Scripts\EasySaveExample.cs" />
     <Compile Include="Assets\Scripts\SaveSystem\Example\Scripts\FileSaveExample.cs" />
@@ -126,11 +129,17 @@
     <Compile Include="Assets\Scripts\TouchButtonDodge.cs" />
     <Compile Include="Assets\Scripts\TouchButtonInteract.cs" />
     <Compile Include="Assets\Scripts\TouchButtonJump.cs" />
+    <Compile Include="Assets\Scripts\TouchButtonPause.cs" />
+    <Compile Include="Assets\UB\Simple2dWeatherEffects\Standard\D2FogsNoiseTexPE.cs" />
+    <Compile Include="Assets\UB\Simple2dWeatherEffects\Standard\D2FogsPE.cs" />
+    <Compile Include="Assets\UB\Simple2dWeatherEffects\Standard\EffectBase.cs" />
+    <None Include="Assets\UB\Simple2dWeatherEffects\Standard\D2Fogs.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Scripts\SaveSystem\DISCLAIMER.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\UB\Simple2dWeatherEffects\Standard\D2FogsNoiseTex.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
@@ -809,6 +818,14 @@
     <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
       <Project>{AAAD366D-5FCA-17C7-1ACF-EA33A30B35E0}</Project>
       <Name>AstarPathfindingProjectEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="IngameDebugConsole.Runtime.csproj">
+      <Project>{10409BBA-4E7F-8512-BFFB-20A4A224CA37}</Project>
+      <Name>IngameDebugConsole.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="IngameDebugConsole.Editor.csproj">
+      <Project>{4E4FC239-5A0A-AFAF-BD95-1EDDF9D04676}</Project>
+      <Name>IngameDebugConsole.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

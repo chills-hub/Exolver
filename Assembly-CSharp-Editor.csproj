@@ -766,6 +766,14 @@
       <Project>{AAAD366D-5FCA-17C7-1ACF-EA33A30B35E0}</Project>
       <Name>AstarPathfindingProjectEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="IngameDebugConsole.Runtime.csproj">
+      <Project>{10409BBA-4E7F-8512-BFFB-20A4A224CA37}</Project>
+      <Name>IngameDebugConsole.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="IngameDebugConsole.Editor.csproj">
+      <Project>{4E4FC239-5A0A-AFAF-BD95-1EDDF9D04676}</Project>
+      <Name>IngameDebugConsole.Editor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

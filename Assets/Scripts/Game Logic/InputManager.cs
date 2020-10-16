@@ -1,20 +1,20 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class InputManager: MonoBehaviour 
 {
-    [HideInInspector]
     public Joystick joystick;
-
     public Button AttackButton;
     public Button InteractButton;
     public Button JumpButton;
     public Button DodgeButton;
+    public Button PauseButton;
 
     private void Start()
     {
         //DontDestroyOnLoad(this);
-        joystick = FindObjectOfType<Joystick>();
+        //joystick = FindObjectOfType<Joystick>();
     }
 
     public (float,float) PlayerMovementInput()   
@@ -34,13 +34,9 @@ public class InputManager: MonoBehaviour
 
     public bool PlayerJumpInput()
     {
-        //bool jumped = false;
+        // bool jumped = false;
 
         //if (Input.GetButtonDown("Jump")) 
-        //{
-        //    jumped = true;
-        //}
-        //if (JumpButton.GetComponent<TouchButtonJump>().jump) 
         //{
         //    jumped = true;
         //}
@@ -62,13 +58,12 @@ public class InputManager: MonoBehaviour
 
     public bool Pause()
     {
-        return Input.GetKeyDown(KeyCode.P);
+        //return Input.GetKeyDown(KeyCode.P);   
+        return PauseButton.GetComponent<TouchButtonPause>().pause;
     }
 
     public bool Escape() 
     {
         return Input.GetKeyDown(KeyCode.Escape);
     }
-
-
 }

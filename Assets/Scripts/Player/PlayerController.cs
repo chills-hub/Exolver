@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
     public InputManager _inputManager;
     public Rigidbody2D PlayerBody;   
     public Animator _animator;
-    private FreeParallax _parallax;
-    private PlayerMovement _playerMovement;
+    public FreeParallax _parallax;
+    private PlayerMovementTester _playerMovement;
     private Vector2 _movement;
     private CapsuleCollider2D _playerCollider;
     private AudioSource _audioSource;
@@ -32,43 +32,69 @@ public class PlayerController : MonoBehaviour
     public float verticalInput;
     private bool _attackInput;
 
-    //Player Variables
+    //Player booleans and variables
     public bool isMoving;
     public bool isGrounded;
     public bool isAttacking;
     public bool isDodging;
+    public bool canJump;
     public float slopeCheckAngle;
     public float currentHealth;
     public Transform AttackPoint;
     public float attackRange = 0.5f;
+    public float jumpCooldown = 0.5f;
 
     //Layer Masks
     public LayerMask groundMask;
     public LayerMask playerMask;
     public LayerMask enemyMask;
 
-    public float jumpForce = 1000f;
+    public float jumpForce;
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
     public float moveSpeed = 10f;
     public InteractionHelper InteractionHelper;
-    private float intTimer;
-    private bool coolDown;
-    private float coolDownTimer = 0.2f;
+    //private float intTimer;
+    //private bool coolDown;
+    //private float coolDownTimer = 0.2f;
+
+    //private raycasthits
+    private RaycastHit2D wallRayLeft;
+    private RaycastHit2D wallRayRight;
 
 
     public PlayerStats PlayerStats { get; set;}
 
+    static PlayerController playerControllerInstance;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        if (playerControllerInstance == null)
+        {
+            //First run, set the instance
+            playerControllerInstance = this;
+
+        }
+        else if (playerControllerInstance != this)
+        {
+            //Instance is not the same as the one we have, destroy old one, and reset to newest one
+            Destroy(playerControllerInstance.gameObject);
+            playerControllerInstance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this);
+        canJump = true;
         currentHealth = PlayerStats.MaxHealth;
         movementSM = GetComponent<StateMachine>();
         _inputManager = transform.gameObject.GetComponent<InputManager>();
         PlayerBody = transform.gameObject.GetComponent<Rigidbody2D>();
         _animator = transform.gameObject.GetComponent<Animator>();
-        _playerMovement = transform.gameObject.AddComponent<PlayerMovement>();
+        _playerMovement = transform.gameObject.AddComponent<PlayerMovementTester>();
         _playerCollider = transform.gameObject.GetComponent<CapsuleCollider2D>();
         _parallax = FindObjectOfType<Camera>().GetComponentInChildren<FreeParallax>();
         _audioSource = transform.gameObject.GetComponent<AudioSource>();
@@ -85,15 +111,14 @@ public class PlayerController : MonoBehaviour
     {
         movementSM.CurrentState.HandleInput();
         movementSM.CurrentState.LogicUpdate();
-        movementSM.CurrentState.PhysicsUpdate();
 
         #region inputs
-        horizontalInput = _inputManager.PlayerMovementInput().Item1;
-        verticalInput = _inputManager.PlayerMovementInput().Item2;
+        //horizontalInput = _inputManager.PlayerMovementInput().Item1;
+        //verticalInput = _inputManager.PlayerMovementInput().Item2;
         _attackInput = _inputManager.Fire1();
         #endregion
 
-        isGrounded = CheckIfGrounded();
+       // isGrounded = CheckIfGrounded();
         slopeCheckAngle = CheckSlopeAngle();
 
         //Debug.Log(isDodging);
@@ -112,6 +137,11 @@ public class PlayerController : MonoBehaviour
         }
 
         SetAnimationTriggers();
+    }
+
+    private void FixedUpdate()
+    {
+        movementSM.CurrentState.PhysicsUpdate();
     }
 
     public void HandleMovement()
@@ -133,6 +163,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleAttacking()
     {
+        _parallax.Speed = 0.0f;
+
         if (currentHealth >= 0)
         {
             int index = UnityEngine.Random.Range(1, 4);
@@ -159,37 +191,37 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        TriggerCooling();
+       // TriggerCooling();
     }
 
-    public void TriggerCooling()
-    {
-        coolDown = true;
-    }
+    //public void TriggerCooling()
+    //{
+    //    coolDown = true;
+    //}
 
-    void CoolDown()
-    {
-        coolDownTimer -= Time.deltaTime;
+    //void CoolDown()
+    //{
+    //    coolDownTimer -= Time.deltaTime;
 
-        if (coolDownTimer <= 0 && coolDown)
-        {
-            coolDown = false;
-            coolDownTimer = intTimer;
-        }
-    }
+    //    if (coolDownTimer <= 0 && coolDown)
+    //    {
+    //        coolDown = false;
+    //        coolDownTimer = intTimer;
+    //    }
+    //}
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(AttackPoint.transform.position, attackRange);
     }
 
-    bool CheckIfGrounded()
+   public bool CheckIfGrounded()
     {
         RaycastHit2D groundRay = Physics2D.Raycast(_playerCollider.bounds.center, Vector2.down, _playerCollider.bounds.extents.y + 0.1f);
         //Debug.DrawRay(_playerCollider.bounds.center, Vector2.down * (_playerCollider.bounds.extents.y + 0.1f));
-        bool isGroundedLocal = groundRay.collider.IsTouchingLayers(groundMask);
+        //Debug.Log(groundRay.collider);
+        return groundRay.collider.IsTouchingLayers(groundMask);
         //Debug.Log(isGroundedLocal);
-        return isGroundedLocal;
     }
 
     public void CheckForWalls()
@@ -197,14 +229,14 @@ public class PlayerController : MonoBehaviour
         int playerLayer = 9;
         int layerMask = ~(1 << playerLayer); //Exclude layer 9 as this is the player
 
-        RaycastHit2D wallRayLeft = Physics2D.CircleCast(_playerCollider.bounds.center, 0.5f, Vector2.left, _playerCollider.bounds.extents.y + 0.1f, layerMask);
-        RaycastHit2D wallRayRight = Physics2D.CircleCast(_playerCollider.bounds.center, 0.5f, Vector2.right, _playerCollider.bounds.extents.y + 0.1f, layerMask);
+        wallRayLeft = Physics2D.CircleCast(_playerCollider.bounds.center, 0.5f, Vector2.left, _playerCollider.bounds.extents.y + 0.2f, layerMask);
+        wallRayRight = Physics2D.CircleCast(_playerCollider.bounds.center, 0.5f, Vector2.right, _playerCollider.bounds.extents.y + 0.2f, layerMask);
         Debug.DrawRay(_playerCollider.bounds.center, Vector2.left, Color.red, _playerCollider.bounds.extents.y + 0.1f);
         Debug.DrawRay(_playerCollider.bounds.center, Vector2.right, Color.red, _playerCollider.bounds.extents.y + 0.1f);
 
         if (wallRayLeft || wallRayRight)
         {
-            _parallax.Speed = 0;
+            _parallax.Speed = 0.0f;
         }
     }
 
@@ -247,23 +279,21 @@ public class PlayerController : MonoBehaviour
     {
         if (horizontalInput > 0 && isMoving)
         {
-            _parallax.Speed = -moveSpeed * 0.5f;
+            if (!wallRayLeft || !wallRayRight) 
+            {
+                _parallax.Speed = -moveSpeed * 0.5f;
+            }
         }
         else if (horizontalInput < 0 && isMoving)
         {
-            _parallax.Speed = moveSpeed * 0.5f;
+            if (!wallRayLeft || !wallRayRight)
+            {
+                _parallax.Speed = moveSpeed * 0.5f;
+            }
         }
         else
         {
             _parallax.Speed = 0.0f;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.transform.name == "WaterSprite") 
-        {
-            currentHealth = 0;
         }
     }
 
@@ -278,6 +308,13 @@ public class PlayerController : MonoBehaviour
         }
         PlayerBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         isAttacking = false;
+    }
+
+   public IEnumerator JumpCooldown()
+    {
+        canJump = false;
+        yield return new WaitForSeconds(jumpCooldown);
+        canJump = true;
     }
 
     IEnumerator DamageWait()
@@ -306,6 +343,7 @@ public class PlayerController : MonoBehaviour
     #region Helper Methods
     void CheckIfMoving()
     {
+        //if (horizontalInput != 0 && isGrounded)
         if (horizontalInput != 0)
         {
             isMoving = true;

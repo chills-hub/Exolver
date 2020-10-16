@@ -23,6 +23,10 @@ public class PlayerStats
     public int AvailableUpgradePoints { get; set; } = 0;
     public float CurrentExpTowardsExpPoint { get; set; } = 0;
     public float ExpPointThreshold { get; set; } = 100;
+    /// <summary>
+    /// The number of upgrade points the player currently has
+    /// </summary>
+    public int LevelCap { get; } = 500;
     public PlayerStats()
     {
     }

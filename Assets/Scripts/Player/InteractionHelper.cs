@@ -4,7 +4,7 @@ using TMPro;
 public class InteractionHelper : MonoBehaviour
 {
     private PlayerController player;
-    private GameManager gameManager;
+    public GameManager gameManager;
 
     [HideInInspector]
     public GameObject MerchantUiPanel;
@@ -32,7 +32,6 @@ public class InteractionHelper : MonoBehaviour
     {
         EventManager.OnInteract += Interact;
         EventManager.OnInteractDungeon += InteractDungeon;
-        gameManager = FindObjectOfType<GameManager>();
         player = FindObjectOfType<PlayerController>();
     }
 

@@ -36,4 +36,24 @@ public class FollowCam : MonoBehaviour
 			transform.position = new Vector3(targetX, targetY, transform.position.z);
 		}
 	}
+
+	static FollowCam followCamInstance;
+
+	private void Awake()
+	{
+		DontDestroyOnLoad(gameObject);
+
+		if (followCamInstance == null)
+		{
+			//First run, set the instance
+			followCamInstance = this;
+
+		}
+		else if (followCamInstance != this)
+		{
+			//Instance is not the same as the one we have, destroy old one, and reset to newest one
+			Destroy(followCamInstance.gameObject);
+			followCamInstance = this;
+		}
+	}
 }

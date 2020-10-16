@@ -5,12 +5,14 @@ using UnityEngine;
 public class Damage : MonoBehaviour
 {
     public float damage;
-    public PlayerController Player;
-    public GameManager gameManager;
+    private PlayerController Player;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        Player = FindObjectOfType<PlayerController>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame

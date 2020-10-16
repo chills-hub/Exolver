@@ -45,6 +45,7 @@ public class GroundedState : State
         _playerController.HandleMovement();
         _playerController.CheckForWalls();
         _playerController.ApplySlopeGrav();
+        _playerController.isGrounded = _playerController.CheckIfGrounded();
     }
 
     void FlipCharacter()

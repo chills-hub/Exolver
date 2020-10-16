@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
     public GameObject[] LevelBlocks;
@@ -8,7 +9,9 @@ public class LevelGenerator : MonoBehaviour
     private const float Player_Distance_Spawn_Blocks = 100f;
     private int StartingSpawnBlocks = 1;
     private PlayerController Player;
-    private int LastBlockNum;
+    //private int LastBlockNum;
+    private int recordedBlocksLimit = 5;
+    private List<int> LastBlockNums = new List<int>();
 
     private void Awake()
     {
@@ -38,14 +41,19 @@ public class LevelGenerator : MonoBehaviour
         int spawnNum = Random.Range(0, LevelBlocks.Length);
 
         //check if next block is the same and re roll number if so
-        if (spawnNum == LastBlockNum) 
+        if (LastBlockNums.Contains(spawnNum)) 
         {
             spawnNum = Random.Range(0, LevelBlocks.Length);
         }
 
         NextPosition = position + new Vector3(40, 0, 0);
         Instantiate(LevelBlocks[spawnNum], NextPosition, Quaternion.identity);
-        LastBlockNum = spawnNum;
+        LastBlockNums.Add(spawnNum);
         LastPosition = NextPosition;
+
+        if (LastBlockNums.Count == recordedBlocksLimit) 
+        {
+            LastBlockNums.Clear();
+        }
     }
 }

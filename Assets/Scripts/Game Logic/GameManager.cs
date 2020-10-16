@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private PlayerController Player;
+    public PlayerController Player;
     public int CurrentLevel;
     public GameState _gameState = new GameState();
     private AudioSource _audioSource;
@@ -28,11 +28,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
+
         if (gameManagerInstance == null)
         {
             //First run, set the instance
             gameManagerInstance = this;
-            DontDestroyOnLoad(gameObject);
 
         }
         else if (gameManagerInstance != this)
@@ -40,21 +41,26 @@ public class GameManager : MonoBehaviour
             //Instance is not the same as the one we have, destroy old one, and reset to newest one
             Destroy(gameManagerInstance.gameObject);
             gameManagerInstance = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 
     private void OnLevelWasLoaded(int level)
     {
         CurrentLevel = level;
+
+        if (level == 1 && GameOverText != null)
+        {
+            GameOverText.gameObject.SetActive(false);
+        }
+
         if (level == 2) 
         {
-            SetPlayerHealth();
-            //SetBlackoutAlphaTo1();
-            StartCoroutine(FadeToBlack(false));
-            //for now just stopping, need to change song
+            //stop the hub music from gamemanager
             _audioSource.Stop();
-
+            SetPlayerHealth();
+            SetBlackoutAlphaTo1();
+            StartCoroutine(FadeToBlack(false));
+            
             //Initialise statemachine again
             InitStateMachine();
         }
@@ -74,7 +80,6 @@ public class GameManager : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         Loader = gameObject.GetComponent<SaveGame>();
         startGame = gameObject.AddComponent<StartGame>();
-        Player = FindObjectOfType<PlayerController>();
         SetBlackoutAlphaTo1();
         StartCoroutine(FadeToBlack(false));
         SetPlayerHealthInitial();
@@ -87,6 +92,19 @@ public class GameManager : MonoBehaviour
         _gameState = GameState.Active;
     }
 
+    private void Update()
+    {
+        if (Player.transform.position.y < -5)
+        {
+            if (_gameState == GameState.GameOver) 
+            {
+                return;
+            }
+            _gameState = GameState.GameOver;
+            ApplyHealthChanges(50000);
+        }
+    }
+
     public void ApplyHealthChanges(float damage) 
     {
         float defenseValue = 100 - Player.PlayerStats.Defense;
@@ -94,7 +112,7 @@ public class GameManager : MonoBehaviour
         if (Player.isDodging) 
         {
             //player is in iFrames
-            //defense value is used for multiplication aghainst damage so zero
+            //defense value is used for multiplication against damage so zero
             //should result in no damage
             defenseValue = 0;
         }
@@ -137,6 +155,9 @@ public class GameManager : MonoBehaviour
 
     void EndGameDialogue() 
     {
+        Debug.Log("PLAYER DEATH");
+        GetComponent<SaveGame>().Save();
+        //Destroy(Player.transform);
         //UNSURE IF THIS WORKS CORRECTLY
         if (_gameState == GameState.GameOver) 
         {   

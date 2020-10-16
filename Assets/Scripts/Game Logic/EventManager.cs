@@ -10,8 +10,8 @@ public class EventManager : MonoBehaviour
     public delegate void InteractActionDungeon();
     public static event InteractActionDungeon OnInteractDungeon;
 
-    public delegate void PauseGame();
-    public static event PauseGame PauseTheGame;
+    //public delegate void PauseGame();
+    //public static event PauseGame PauseTheGame;
 
     public delegate void UpgradeHealth(float newValue, int level, int availablePoints);
     public static event UpgradeHealth UpgradePlayerHealth;
@@ -22,10 +22,12 @@ public class EventManager : MonoBehaviour
     public delegate void UpgradeDefense(int newValue, int level, int availablePoints);
     public static event UpgradeDefense UpgradePlayerDefense;
 
-    private PlayerController Player;
+    public PlayerController Player;
     private UpgradeStats UpgradeStats;
     private bool isUpgrading = false;
     private bool IsPaused = false;
+    private TouchButtonPause touchButtonPause;
+    public GameManager GameManager;
 
     [HideInInspector]
     public GameObject Merchant;
@@ -41,23 +43,37 @@ public class EventManager : MonoBehaviour
     public GameObject MerchantSpeechPanel;
     [HideInInspector]
     public TextMeshProUGUI Pausedtext;
-    [HideInInspector]
-    public GameManager GameManager;
 
+    static EventManager eventManagerInstance;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        if (eventManagerInstance == null)
+        {
+            //First run, set the instance
+            eventManagerInstance = this;
+        }
+        else if (eventManagerInstance != this)
+        {
+            //Instance is not the same as the one we have, destroy old one, and reset to newest one
+            Destroy(eventManagerInstance.gameObject);
+            eventManagerInstance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this);
-        Player = FindObjectOfType<PlayerController>();
         UpgradeStats = new UpgradeStats();
+        touchButtonPause = FindObjectOfType<TouchButtonPause>();
+        //GameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        PauseTheGameEvent();
-
         //need to disable these on level 2 for pausing to work
         if (GameManager.CurrentLevel == 1) 
         {
@@ -75,6 +91,7 @@ public class EventManager : MonoBehaviour
                 if (Player._inputManager.GetInteractionInput())
                 {
                     Player.GetComponent<PlayerController>().enabled = false;
+                    Player._parallax.Speed = 0.0f;
                     isUpgrading = true;
                     if (OnInteract != null)
                         OnInteract();
@@ -117,7 +134,6 @@ public class EventManager : MonoBehaviour
 
     public void CloseShopMenu()
     {
-
         isUpgrading = false;
         MerchantUiPanel.gameObject.SetActive(false);
         MerchantSpeechPanel.gameObject.SetActive(false);
@@ -127,16 +143,16 @@ public class EventManager : MonoBehaviour
 
     public void PauseTheGameEvent()
     {
-      if (Player._inputManager.Pause()) 
-      {
-         IsPaused = !IsPaused;
-      }
-        CheckPaused();
+        if (touchButtonPause.pause)
+        {
+            IsPaused = !IsPaused;
+            CheckPaused();
+        }
     }
 
     public void UpgradeHealthStat()
     {
-        if (Player.PlayerStats.AvailableUpgradePoints > 0)
+        if (Player.PlayerStats.AvailableUpgradePoints > 0 && Player.PlayerStats.Level != Player.PlayerStats.LevelCap)
         {
             Player.PlayerStats.MaxHealth += UpgradeStats.NumToIncrementHealth;
             Player.PlayerStats.AvailableUpgradePoints--;
@@ -148,7 +164,7 @@ public class EventManager : MonoBehaviour
 
     public void UpgradeDamageStat()
     {
-        if (Player.PlayerStats.AvailableUpgradePoints > 0)
+        if (Player.PlayerStats.AvailableUpgradePoints > 0 && Player.PlayerStats.Level != Player.PlayerStats.LevelCap)
         {
             Player.PlayerStats.Damage += UpgradeStats.NumToIncrementDamage;
             Player.PlayerStats.AvailableUpgradePoints--;
@@ -160,7 +176,7 @@ public class EventManager : MonoBehaviour
 
     public void UpgradeDefenseStat()
     {
-        if (Player.PlayerStats.AvailableUpgradePoints > 0)
+        if (Player.PlayerStats.AvailableUpgradePoints > 0 && Player.PlayerStats.Level != Player.PlayerStats.LevelCap)
         {
             Player.PlayerStats.Defense += UpgradeStats.NumToIncrementDefence;
             Player.PlayerStats.AvailableUpgradePoints--;
