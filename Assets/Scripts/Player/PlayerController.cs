@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource _audioSource;
     public GameObject PlayerAimArrow;
     public GameObject ArrowPoint;
+    public float CurrentDistanceTravelled;
 
     //Inputs
     public float horizontalInput;
@@ -61,7 +62,8 @@ public class PlayerController : MonoBehaviour
     //private raycasthits
     private RaycastHit2D wallRayLeft;
     private RaycastHit2D wallRayRight;
-
+    [HideInInspector]
+    public bool InFog = false;
 
     public PlayerStats PlayerStats { get; set;}
 
@@ -90,7 +92,6 @@ public class PlayerController : MonoBehaviour
     {
         canJump = true;
         currentHealth = PlayerStats.MaxHealth;
-        movementSM = GetComponent<StateMachine>();
         _inputManager = transform.gameObject.GetComponent<InputManager>();
         PlayerBody = transform.gameObject.GetComponent<Rigidbody2D>();
         _animator = transform.gameObject.GetComponent<Animator>();
@@ -98,6 +99,7 @@ public class PlayerController : MonoBehaviour
         _playerCollider = transform.gameObject.GetComponent<CapsuleCollider2D>();
         _parallax = FindObjectOfType<Camera>().GetComponentInChildren<FreeParallax>();
         _audioSource = transform.gameObject.GetComponent<AudioSource>();
+        movementSM = GetComponent<StateMachine>();
         standing = StandingState.CreateStandingState(this, movementSM);
         dodging = DodgingState.CreateDodgingState(this, movementSM);
         jumping = JumpingState.CreateJumpingState(this, movementSM);

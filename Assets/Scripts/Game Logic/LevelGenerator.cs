@@ -6,7 +6,7 @@ public class LevelGenerator : MonoBehaviour
     public GameObject StartingPoint;
     private Vector3 LastPosition;
     private Vector3 NextPosition;
-    private const float Player_Distance_Spawn_Blocks = 100f;
+    private const float Player_Distance_Spawn_Blocks = 75f;
     private int StartingSpawnBlocks = 1;
     private PlayerController Player;
     //private int LastBlockNum;

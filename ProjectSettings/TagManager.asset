@@ -11,6 +11,7 @@ TagManager:
   - Grid
   - Projectile
   - Merchant
+  - DeleteBlock
   layers:
   - Default
   - TransparentFX

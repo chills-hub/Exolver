@@ -6,7 +6,7 @@ public class GroundedState : State
 
     public GroundedState(PlayerController playerController, StateMachine stateMachine) : base(playerController, stateMachine)
     {
-
+       
     }
 
     public override void Enter()

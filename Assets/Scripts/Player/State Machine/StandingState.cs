@@ -3,6 +3,7 @@ public class StandingState : GroundedState
 {
     private bool jump;
     private bool dodge;
+    public InputManager input;
 
     public StandingState(PlayerController playerController, StateMachine stateMachine) : base(playerController, stateMachine)
     {
@@ -16,6 +17,7 @@ public class StandingState : GroundedState
         StandingState standingState = standing.AddComponent<StandingState>();
         standingState._playerController = playerController;
         standingState._stateMachine = stateMachine;
+        standingState.input = playerController._inputManager;
         return standingState;
     }
 
@@ -29,8 +31,8 @@ public class StandingState : GroundedState
     public override void HandleInput()
     {
         base.HandleInput();
-        jump = _playerController._inputManager.PlayerJumpInput();
-        dodge = _playerController._inputManager.Dodge();
+        jump = input.PlayerJumpInput();
+        dodge = input.Dodge();
     }
 
     public override void LogicUpdate()

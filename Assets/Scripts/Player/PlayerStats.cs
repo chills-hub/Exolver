@@ -23,6 +23,7 @@ public class PlayerStats
     public int AvailableUpgradePoints { get; set; } = 0;
     public float CurrentExpTowardsExpPoint { get; set; } = 0;
     public float ExpPointThreshold { get; set; } = 100;
+    public float GreatestDistanceTravelled { get; set; }
     /// <summary>
     /// The number of upgrade points the player currently has
     /// </summary>

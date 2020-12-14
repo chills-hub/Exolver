@@ -67,11 +67,11 @@ public class ReferenceHolder : MonoBehaviour
         GameManager.GameOverText = GameOverText;
         EventManager.GameManager = GameManager;
         EventManager.Pausedtext = Pausedtext;
-        Player.gameObject.AddComponent<InteractionHelper>();
-        Player.gameObject.GetComponent<InteractionHelper>().gameManager = GameManager;
+        Player = FindObjectOfType<PlayerController>();
 
         if (level == 1)//aka main hub, only need these in that area
         {
+            Player.gameObject.GetComponent<InteractionHelper>().gameManager = GameManager;
             EventManager.InteractArrow = InteractArrow;
             EventManager.Merchant = MerchantTrigger;
             EventManager.MerchantUiPanel = MerchantUiPanel;

@@ -39,14 +39,5 @@ public class JumpingState : State
     private void Jump()
     {
          _playerController.PlayerBody.velocity += Vector2.up * _playerController.jumpForce * Time.deltaTime;
-
-        //if (_playerController.PlayerBody.velocity.y < 0)
-        //{
-        //    _playerController.PlayerBody.velocity += Vector2.up * Physics2D.gravity.y * (_playerController.fallMultiplier - 1);
-        //}
-        //else if (_playerController.PlayerBody.velocity.y > 0 && !_playerController._inputManager.PlayerJumpInput())
-        //{
-        //    _playerController.PlayerBody.velocity += Vector2.up * Physics2D.gravity.y * (_playerController.lowJumpMultiplier - 1);
-        //}
     }
 }

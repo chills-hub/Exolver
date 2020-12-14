@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public SaveGame Loader;
 
+    public StandingState standing;
+    public DodgingState dodging;
+    public JumpingState jumping;
+
     static GameManager gameManagerInstance; 
 
     private void Awake()
@@ -60,9 +64,7 @@ public class GameManager : MonoBehaviour
             SetPlayerHealth();
             SetBlackoutAlphaTo1();
             StartCoroutine(FadeToBlack(false));
-            
-            //Initialise statemachine again
-            InitStateMachine();
+            //InitStateMachine();
         }
     }
 
@@ -94,7 +96,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Player.transform.position.y < -5)
+        if (Player.transform.position.y < -5 || Player.InFog)
         {
             if (_gameState == GameState.GameOver) 
             {
@@ -157,7 +159,10 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("PLAYER DEATH");
         GetComponent<SaveGame>().Save();
-        //Destroy(Player.transform);
+        Destroy(Player.standing);
+        Destroy(Player.dodging);
+        Destroy(Player.jumping);
+        Destroy(Player.gameObject);
         //UNSURE IF THIS WORKS CORRECTLY
         if (_gameState == GameState.GameOver) 
         {   
